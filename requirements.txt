@@ -1,0 +1,5 @@
+tensorflow
+flask
+gunicorn
+python-chess
+numpy
