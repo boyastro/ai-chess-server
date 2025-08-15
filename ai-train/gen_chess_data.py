@@ -72,13 +72,7 @@ def play_game(args):
         }
 
 if __name__ == "__main__":
-    # Đọc dữ liệu cũ nếu có
-    try:
-        with open("data/games_play.json", "r") as f:
-            games = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        games = []
-
+    # Luôn reset file games_play.json mỗi lần chạy
     engine_path = "/opt/homebrew/bin/stockfish"
     num_games = 20
     num_workers = 4  # Số tiến trình song song, tùy CPU
@@ -86,6 +80,5 @@ if __name__ == "__main__":
     args_list = [(f"game_{int(time.time()*1000)}_{i}", engine_path) for i in range(num_games)]
     with Pool(num_workers) as pool:
         new_games = pool.map(play_game, args_list)
-        games.extend(new_games)
         with open("data/games_play.json", "w") as f:
-            json.dump(games, f, indent=2)
+            json.dump(new_games, f, indent=2)
