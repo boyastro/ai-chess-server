@@ -1,1 +1,2 @@
 source ev3.10/bin/activate
+!pip install tensorflow flask python-chess scikit-learn
