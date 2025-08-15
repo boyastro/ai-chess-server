@@ -18,8 +18,14 @@ fen_list = []
 move_list = []
 move_quality_labels = []  # 1: tốt (dẫn đến thắng), 0: xấu (dẫn đến thua)
 for game in games:
-    if game.get('result') in ['1-0', '0-1'] and 'moves' in game:
-        is_win = 1 if game.get('result') == '1-0' else 0
+    result = game.get('result')
+    if result in ['1-0', '0-1', '1/2-1/2'] and 'moves' in game:
+        if result == '1-0':
+            label = 1  # tốt (thắng)
+        elif result == '0-1':
+            label = 0  # xấu (thua)
+        else:
+            label = 0.5  # hòa
         for m in game['moves']:
             fen = m.get('fen')
             move = m.get('move')
@@ -27,7 +33,7 @@ for game in games:
                 move_str = f"{move['from']['x']}{move['from']['y']}{move['to']['x']}{move['to']['y']}"
                 fen_list.append(fen)
                 move_list.append(move_str)
-                move_quality_labels.append(is_win)
+                move_quality_labels.append(label)
 
 
 

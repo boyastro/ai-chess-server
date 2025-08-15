@@ -10,17 +10,16 @@ def random_evaluation(board):
 
 
 # Chọn nước đi tốt nhất bằng Stockfish
-def best_move_stockfish(board, engine_path="stockfish"):
-    with chess.engine.SimpleEngine.popen_uci(engine_path) as engine:
-        result = engine.play(board, chess.engine.Limit(time=0.1))
-        return result.move
+def best_move_stockfish(board, engine):
+    result = engine.play(board, chess.engine.Limit(time=0.1))
+    return result.move
 
 # Sinh một ván cờ tự động
-def play_game(game_id, engine_path="stockfish"):
+def play_game(game_id, engine):
     board = chess.Board()
     moves = []
     while not board.is_game_over():
-        move = best_move_stockfish(board, engine_path)
+        move = best_move_stockfish(board, engine)
         board.push(move)
         fen = board.fen()
         evaluation = random_evaluation(board)  # Có thể thay bằng đánh giá của engine nếu muốn
@@ -51,10 +50,12 @@ if __name__ == "__main__":
     except (FileNotFoundError, json.JSONDecodeError):
         games = []
 
-    # Thêm dữ liệu mới
-    for i in range(10):
-        games.append(play_game(f"game_{int(time.time()*1000)}_{i}", engine_path="stockfish"))
-
-    # Ghi lại toàn bộ dữ liệu
-    with open("data/games_play.json", "w") as f:
-        json.dump(games, f, indent=2)
+    # Khởi động engine một lần
+    engine_path = "/opt/homebrew/bin/stockfish"
+    with chess.engine.SimpleEngine.popen_uci(engine_path) as engine:
+        for i in range(20):
+            game = play_game(f"game_{int(time.time()*1000)}_{i}", engine)
+            games.append(game)
+            # Lưu ngay sau mỗi ván
+            with open("data/games_play.json", "w") as f:
+                json.dump(games, f, indent=2)
