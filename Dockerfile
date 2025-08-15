@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code and model
 COPY server.py ./
-COPY model_move_quality.h5 ./
+COPY model_move.h5 ./
 
 EXPOSE 5001
 
