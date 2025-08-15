@@ -4,7 +4,7 @@ import numpy as np
 from flask import Flask, request, jsonify
 
 # Load model
-model = tf.keras.models.load_model("model_move_quality.h5")
+model = tf.keras.models.load_model("model_move.h5")
 
 app = Flask(__name__)
 
