@@ -74,7 +74,7 @@ def play_game(args):
 if __name__ == "__main__":
     # Luôn reset file games_play.json mỗi lần chạy
     engine_path = "/opt/homebrew/bin/stockfish"
-    num_games = 20
+    num_games = 100
     num_workers = 4  # Số tiến trình song song, tùy CPU
 
     args_list = [(f"game_{int(time.time()*1000)}_{i}", engine_path) for i in range(num_games)]
