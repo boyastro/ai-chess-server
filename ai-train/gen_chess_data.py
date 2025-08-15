@@ -61,15 +61,31 @@ def play_game(args):
                 "evaluation": evaluation
             }
             moves.append(move_dict)
-        result = board.result()
-        reason = board.outcome().termination.name if board.outcome() else "unknown"
-        return {
-            "id": game_id,
-            "moves": moves,
-            "result": result,
-            "reason": reason,
-            "timestamp": int(time.time() * 1000)
-        }
+    result = board.result()
+    reason = board.outcome().termination.name if board.outcome() else "unknown"
+    # Lưu từng ván ngay khi sinh xong
+    try:
+        with open("data/games_play.json", "r") as f:
+            games = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        games = []
+    # Thêm ván mới vào danh sách và ghi lại file
+    games.append({
+        "id": game_id,
+        "moves": moves,
+        "result": result,
+        "reason": reason,
+        "timestamp": int(time.time() * 1000)
+    })
+    with open("data/games_play.json", "w") as f:
+        json.dump(games, f, indent=2)
+    return {
+        "id": game_id,
+        "moves": moves,
+        "result": result,
+        "reason": reason,
+        "timestamp": int(time.time() * 1000)
+    }
 
 if __name__ == "__main__":
     # Luôn reset file games_play.json mỗi lần chạy
