@@ -9,10 +9,14 @@ model = tf.keras.models.load_model("model_move.h5")
 app = Flask(__name__)
 
 def board_to_input(board: chess.Board):
-    # TODO: Chuyển trạng thái bàn cờ sang input cho model
-    # Ví dụ: encode FEN hoặc mảng 1D tuỳ theo model
-    # Dưới đây là placeholder, cần chỉnh lại cho đúng với model
-    return np.zeros((model.input_shape[1],), dtype=np.float32)
+    # Chuyển trạng thái bàn cờ sang mảng 1D 64 số, giống như khi train
+    piece_map = board.piece_map()
+    matrix = np.zeros((8, 8), dtype=int)
+    for square, piece in piece_map.items():
+        row = 7 - (square // 8)
+        col = square % 8
+        matrix[row, col] = piece.piece_type * (1 if piece.color else -1)
+    return matrix.flatten()
 
 @app.route("/bestmove", methods=["POST"])
 def best_move():
